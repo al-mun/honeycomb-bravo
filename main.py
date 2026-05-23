@@ -36,7 +36,6 @@ def turn_off_led(button):
             b_pos = 1 + (btn // 8)
             bi_pos = btn % 8
             buffer[b_pos] |= (1 << bi_pos)
-
     try:
         device.send_feature_report(bytes(buffer))
     except Exception as e:
