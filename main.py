@@ -22,6 +22,31 @@ top_led_status = {
     5: 0,
     6: 0,
     7: 0,
+    8: 0,
+    9: 0,
+    10: 0,
+    11: 0,
+    12: 0,
+    13: 0,
+    14: 0,
+    15: 0,
+    16: 0,
+    17: 0,
+    18: 0,
+    19: 0,
+    20: 0,
+    21: 0,
+    22: 0,
+    23: 0,
+    24: 0,
+    25: 0,
+    26: 0,
+    27: 0,
+    28: 0,
+    29: 0,
+    30: 0,
+    31: 0,
+    32: 0,
     33: 0,
     34: 0,
     35: 0,
@@ -31,7 +56,11 @@ top_led_status = {
     39: 0,
     40: 0,
     41: 0,
-    42: 0
+    42: 0,
+    43: 0,
+    44: 0,
+    45: 0,
+    46: 0
 }
 
 switch_lights = {
@@ -69,15 +98,15 @@ def turn_on_switch_lights(button):
         except Exception as e:
             print(f'error: {e}')
 
-def build_buffer():
+def build_buffer(button):
     buffer = [0x00, 0x00, 0x00, 0x00, 0x00]
-    for btn, status in top_led_status.items():
+    for button, status in top_led_status.items():
         if status == 1:
-            b_pos = 1 + (btn // 8)
-            bi_pos = btn % 8
+            b_pos = 1 + (button // 8)
+            bi_pos = button % 8
             buffer[b_pos] |= (1 << bi_pos)
-            print(f'bit {btn}: buffer = {buffer}')
-    return buffer #for turning light off
+            print(f'bit {button}: buffer = {buffer}')
+    return buffer 
 
 def testing_buffer():
     for i in range(8,27):
@@ -110,7 +139,7 @@ def turn_on_led(button):
     print(f'turning on button: {button}')
     top_led_status[button] = 1
     try:
-        device.send_feature_report(build_buffer())
+        device.send_feature_report(build_buffer(button))
     except Exception as e:
         print(f'error: {e}')
 def turn_off_all_lights():
@@ -127,13 +156,13 @@ while running:
             if event.type == pygame.JOYBUTTONDOWN:
                 button = event.button
                 print(f'button pressed: {button}')
-                if button < 8:
-                    if top_led_status[button] == 0:
-                        turn_on_led(button)
-                    elif top_led_status[button] == 1:
-                        turn_off_led(button)
-                elif button >=30 and button <=46:
-                    turn_on_switch_lights(button)
+                # if button <= 6:
+                if top_led_status[button] == 0:
+                    turn_on_led(button)
+                elif top_led_status[button] == 1:
+                    turn_off_led(button)
+                # elif button >=30 and button <=46:
+                #     turn_on_switch_lights(button)
                     #testing_buffer()
     except KeyboardInterrupt:
         print("exiting")
